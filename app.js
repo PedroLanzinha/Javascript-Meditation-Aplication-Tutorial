@@ -7,7 +7,8 @@ const app = () =>{
     //Sounds
     const sounds = document.querySelectorAll(".sound-picker button");
     //Time Displayer
-    const timeDisplay = document.querySelector(".time-Display");
+    const timeDisplay = document.querySelector(".time-display");
+    const timeSelect = document.querySelectorAll(".time-select button")
     //get lenght of circular outline
     const outlineLength = outline.getTotalLength();
     //console.log(outlineLenght);
@@ -19,19 +20,51 @@ const app = () =>{
 
     //Play Sound
     play.addEventListener('click', () =>{
-        song.play();
+        checkPlaying(song);
+    });
+
+    //select sound
+    timeSelect.forEach(option => {
+        option.addEventListener('click', function(){
+            fakeDuration = this.getAttribute('data-time');
+            timeDisplay.textContent = `${Math.floor(fakeDuration / 60)}:
+            ${Math.floor(fakeDuration % 60)}`;
+        });
     });
 
     //function to stop and play song
     const checkPlaying = song =>{
         if(song.paused){
         song.play();
+        video.play();
         play.src = './svg/pause.svg';
         }else{
             song.pause();
+            video.pause();
             play.src = './svg/play.svg';
         }
-    }
-}
+    };
+    //Circle animation
+    song.ontimeupdate = () =>{
+        let currentTime = song.currentTime;
+        let elapsed = fakeDuration - currentTime;
+        let seconds = Math.floor(elapsed % 60);
+        let minutes = Math.floor(elapsed / 60);
+
+        // anime circle
+        let progress = outlineLength - (currentTime / fakeDuration) * outlineLength;
+        outline.style.strokeDashoffset = progress;
+        //text animation
+        timeDisplay.textContent = `${minutes}:${seconds}`; 
+
+        if(currentTime >= fakeDuration){
+            song.pause();
+            song.currentTime = 0;
+            play.src = "./svg/play.svg";
+            video.pause();
+        }
+
+    };
+};
 
 app();
