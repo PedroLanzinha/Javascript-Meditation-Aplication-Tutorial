@@ -9,14 +9,29 @@ const app = () =>{
     //Time Displayer
     const timeDisplay = document.querySelector(".time-Display");
     //get lenght of circular outline
-    const outlineLength = outline.getTotalLenght();
+    const outlineLength = outline.getTotalLength();
     //console.log(outlineLenght);
     //Duration
     let fakeDuration = 600;
 
     outline.style.strokeDasharray = outlineLength;
-    outline.style.strokeDashoffset = 200;
+    outline.style.strokeDashoffset = outlineLength;
 
-};
+    //Play Sound
+    play.addEventListener('click', () =>{
+        song.play();
+    });
+
+    //function to stop and play song
+    const checkPlaying = song =>{
+        if(song.paused){
+        song.play();
+        play.src = './svg/pause.svg';
+        }else{
+            song.pause();
+            play.src = './svg/play.svg';
+        }
+    }
+}
 
 app();
